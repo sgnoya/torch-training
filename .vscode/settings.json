@@ -2,6 +2,9 @@
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter",
         "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+        },
     },
     "python.formatting.provider": "none",
     "python.analysis.inlayHints.callArgumentNames": true,
@@ -10,6 +13,8 @@
         "editorInlayHint.foreground": "#9b9b9b",
         "editorInlayHint.background": "#7196a6",
     },
+    "isort.args":["--profile", "black"],
+
     //
     "editor.renderControlCharacters": true,
     "editor.suggestSelection": "first",

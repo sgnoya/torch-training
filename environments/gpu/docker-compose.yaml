@@ -18,5 +18,6 @@ services:
     tty: true
     volumes:
       - ../../:/home/${USER}/torch-training
+      - /home/${USER}/.cache/pypoetry:/home/${USER}/.cache/pypoetry
     ports:
       - 8000:8000

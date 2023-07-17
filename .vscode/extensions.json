@@ -14,6 +14,7 @@
         "shardulm94.trailing-spaces",
         "mosapride.zenkaku",
         "mhutchie.git-graph",
-        "ms-toolsai.jupyter"
+        "ms-toolsai.jupyter",
+        "ms-python.isort"
     ]
 }
