@@ -1,0 +1,22 @@
+{
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true,
+    },
+    "python.formatting.provider": "none",
+    "python.analysis.inlayHints.callArgumentNames": true,
+    "python.analysis.inlayHints.functionReturnTypes": true,
+    "workbench.colorCustomizations": {
+        "editorInlayHint.foreground": "#9b9b9b",
+        "editorInlayHint.background": "#7196a6",
+    },
+    //
+    "editor.renderControlCharacters": true,
+    "editor.suggestSelection": "first",
+    "breadcrumbs.enabled": true, 
+    "files.insertFinalNewline": true,
+    "editor.renderLineHighlight": "all",
+    "files.autoGuessEncoding": true,
+    "editor.bracketPairColorization.enabled": true,
+    "editor.minimap.showSlider": "always",
+}

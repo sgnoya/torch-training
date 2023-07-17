@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  core:
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    build:
+      args:
+        - BASE_IMAGE=nvidia/cuda:11.0.3-devel-ubuntu20.04
+        - PYTHON_VERSION=3.8
+        - UID=${HOST_UID-1000}
+        - GID=${HOST_GID-1000}
+        - USER_NAME=${USER}
+        - GROUP_NAME=${USER}
+      context: ../../
+      dockerfile: environments/Dockerfile
+    tty: true
+    volumes:
+      - ../../:/home/${USER}/torch-training
+    ports:
+      - 8000:8000

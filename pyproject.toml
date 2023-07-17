@@ -1,0 +1,75 @@
+[tool.poetry]
+name = "torch-training"
+version = "0.0.1"
+description = "A short description of torch-training."
+authors = ["N. Sogi <your-name@example.com>"]
+readme = "README.md"
+packages = [
+    { include = "torch_training", from = "src" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+torch = {version = "^2.0.1+cu118", source = "torch_cu118"}
+torchvision = {version = "^0.15.2+cu118", source = "torch_cu118"}
+pytorch-ignite = "^0.4.12"
+pillow = "^10.0.0"
+opencv-python = "^4.8.0.74"
+seaborn = "^0.12.2"
+matplotlib = "^3.7.2"
+ipykernel = "^6.24.0"
+tensorboardx = "^2.6.1"
+tqdm = "^4.65.0"
+ffcv = "^1.0.2"
+
+[tool.poetry.group.dev.dependencies]
+pytest-cov = "^3.0.0"
+black = "^22.3.0"
+isort = "^5.10.1"
+flake8 = "^4.0.1"
+mypy = "^0.950"
+mdformat-gfm = "^0.3.5"
+mdformat_frontmatter = "^0.4.1"
+mdformat_footnote = "^0.1.1"
+
+
+[[tool.poetry.source]]
+name = "torch_cu118"
+url = "https://download.pytorch.org/whl/cu118"
+priority = "explicit"
+
+[tool.black]
+line-length = 88
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.mypy]
+python_version = 3.8
+# following setting is same as pysen
+# https://github.com/pfnet/pysen/blob/main/setup.cfg#L12
+check_untyped_defs = true
+disallow_any_decorated = false
+disallow_any_generics = false
+disallow_any_unimported = false
+disallow_incomplete_defs = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_decorators = false
+disallow_untyped_defs = true
+ignore_errors = false
+ignore_missing_imports = true
+no_implicit_optional = true
+show_error_codes = true
+strict_equality = true
+strict_optional = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+warn_unused_ignores = true
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

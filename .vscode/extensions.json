@@ -1,0 +1,19 @@
+{
+    "recommendations": [
+        "oderwat.indent-rainbow",
+        "ms-python.black-formatter",
+        "ms-python.flake8",
+        "ms-python.mypy-type-checker",
+        "ms-python.vscode-pylance",
+        "ms-python.python",
+        "njpwerner.autodocstring",
+        "usernamehw.errorlens",
+        "donjayamanne.githistory",
+        "yzhang.markdown-all-in-one",
+        "christian-kohler.path-intellisense",
+        "shardulm94.trailing-spaces",
+        "mosapride.zenkaku",
+        "mhutchie.git-graph",
+        "ms-toolsai.jupyter"
+    ]
+}
