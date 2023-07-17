@@ -1,11 +1,10 @@
 from datetime import datetime
-from typing import Any, Tuple
+from typing import Tuple
 
 import torch
 from ignite.contrib.handlers import TensorboardLogger, global_step_from_engine
 from ignite.contrib.handlers.tqdm_logger import ProgressBar
 from ignite.engine import Engine, Events
-from ignite.handlers import ModelCheckpoint
 from ignite.metrics import Accuracy, Loss, RunningAverage
 from torch import nn
 from torch.utils.data import DataLoader
@@ -15,12 +14,13 @@ from torchvision.models import resnet18
 from torchvision.transforms import Compose, Normalize
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-log_interval = 100
 
 
 class IgniteCifar10Trainer:
     def __init__(self) -> None:
+        # data loader
         train_loader, val_loader = self.make_loader()
+
         # network
         model = resnet18(num_classes=10).to(device)
 
@@ -33,7 +33,7 @@ class IgniteCifar10Trainer:
             optimizer.zero_grad()
             x, y = batch[0].to(device), batch[1].to(device)
             y_pred = model(x)
-            loss = nn.functional.cross_entropy(y_pred, y)
+            loss: torch.Tensor = nn.functional.cross_entropy(y_pred, y)
             loss.backward()
             optimizer.step()
             loss_val: float = loss.item()
@@ -51,7 +51,7 @@ class IgniteCifar10Trainer:
             engine: Engine, batch: tuple
         ) -> Tuple[torch.Tensor, torch.Tensor]:
             model.eval()
-            with torch.no_grad():
+            with torch.inference_mode():
                 x, y = batch[0].to(device), batch[1].to(device)
                 y_pred = model(x)
                 return y_pred, y
@@ -101,7 +101,10 @@ class IgniteCifar10Trainer:
         data_transform = Compose(
             [
                 transforms.ToTensor(),
-                Normalize((125.307, 122.961, 113.8575), std=(51.5865, 50.847, 51.255)),
+                Normalize(
+                    (125.307 / 255.0, 122.961 / 255, 113.8575 / 255),
+                    std=(51.5865 / 255, 50.847 / 255, 51.255 / 255),
+                ),
             ]
         )
 
