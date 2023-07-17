@@ -1,15 +1,16 @@
+from typing import Any, Tuple
+
 import torch
+from ignite.contrib.handlers import TensorboardLogger, global_step_from_engine
+from ignite.contrib.handlers.tqdm_logger import ProgressBar
+from ignite.engine import Engine, Events
+from ignite.handlers import ModelCheckpoint
+from ignite.metrics import Accuracy, Loss, RunningAverage
 from torch import nn
 from torch.utils.data import DataLoader
 from torchvision.datasets import MNIST
 from torchvision.models import resnet18
 from torchvision.transforms import Compose, Normalize, ToTensor
-from typing import Any, Tuple
-from ignite.engine import Engine, Events
-from ignite.contrib.handlers.tqdm_logger import ProgressBar
-from ignite.metrics import Accuracy, Loss, RunningAverage
-from ignite.handlers import ModelCheckpoint
-from ignite.contrib.handlers import TensorboardLogger, global_step_from_engine
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 log_interval = 100
@@ -51,7 +52,7 @@ optimizer = torch.optim.RMSprop(model.parameters(), lr=0.005)
 # trainer
 
 
-def train_step(engine: Engine, batch: Tuple) -> float:
+def train_step(engine: Engine, batch: Tuple) -> dict:
     model.train()
     optimizer.zero_grad()
     x, y = batch[0].to(device), batch[1].to(device)
