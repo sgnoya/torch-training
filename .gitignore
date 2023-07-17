@@ -9,3 +9,9 @@ __pycache__
 !data/README.md
 !models/README.md
 !outputs/README.md
+*.beton
+*.gz
+tb-logger
+MNIST
+cifar-10-batches-py
+checkpoint
