@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any, Tuple
 
 import ffcv.transforms as fftrans
@@ -101,29 +102,11 @@ def train_step(engine: Engine, batch: Tuple) -> dict:
 
 
 trainer = Engine(train_step)
-# pbar
-pbar = ProgressBar(persist=True)
 RunningAverage(output_transform=lambda x: x["loss"]).attach(trainer, "loss")
 
+# pbar
+pbar = ProgressBar(persist=True)
 pbar.attach(trainer, ["loss"])
-
-
-@trainer.on(Events.EPOCH_COMPLETED)
-def log_training_results(trainer: Engine) -> None:
-    train_evaluator.run(train_loader)
-    metrics = train_evaluator.state.metrics
-    print(
-        f"Training Results - Epoch[{trainer.state.epoch}] Avg accuracy: {metrics['accuracy']:.2f} Avg loss: {metrics['loss']:.2f}"
-    )
-
-
-@trainer.on(Events.EPOCH_COMPLETED)
-def log_validation_results(trainer: Engine) -> None:
-    val_evaluator.run(val_loader)
-    metrics = val_evaluator.state.metrics
-    print(
-        f"Validation Results - Epoch[{trainer.state.epoch}] Avg accuracy: {metrics['accuracy']:.2f} Avg loss: {metrics['loss']:.2f}"
-    )
 
 
 # evaluator
@@ -137,13 +120,9 @@ def validation_step(engine: Engine, batch: tuple) -> Tuple[torch.Tensor, torch.T
 
 val_metrics = {"accuracy": Accuracy(), "loss": Loss(nn.CrossEntropyLoss())}
 
-train_evaluator = Engine(validation_step)
-val_evaluator = Engine(validation_step)
+evaluator = Engine(validation_step)
 for name, metric in val_metrics.items():
-    metric.attach(train_evaluator, name)
-
-for name, metric in val_metrics.items():
-    metric.attach(val_evaluator, name)
+    metric.attach(evaluator, name)
 
 
 # checkpoint
@@ -151,33 +130,35 @@ def score_function(engine: Engine) -> Any:
     return engine.state.metrics["accuracy"]
 
 
-model_checkpoint = ModelCheckpoint(
-    "checkpoint",
-    n_saved=2,
-    filename_prefix="best",
-    score_function=score_function,
-    score_name="accuracy",
-    global_step_transform=global_step_from_engine(trainer),
-)
-
 # logger
-tb_logger = TensorboardLogger(log_dir="tb-logger")
+@trainer.on(Events.EPOCH_COMPLETED)
+def log_validation_results(trainer: Engine) -> None:
+    evaluator.run(val_loader)
+    metrics = evaluator.state.metrics
+    print(
+        f"Validation Results - Epoch[{trainer.state.epoch}] Avg accuracy: {metrics['accuracy']:.2f} Avg loss: {metrics['loss']:.2f}"
+    )
+
+
+dt_string = datetime.now().strftime("%Y-%m-%d--%H:%M:%S")
+save_dir = f"tb-logger/cifar10_ffcv/{dt_string}"
+tb_logger = TensorboardLogger(log_dir=save_dir)
 
 tb_logger.attach_output_handler(
     trainer,
-    event_name=Events.ITERATION_COMPLETED(every=100),
+    event_name=Events.EPOCH_COMPLETED,
     tag="training",
-    output_transform=lambda loss: {"batch_loss": loss},
+    metric_names="all",
 )
 
-for tag, evaluator in [("training", train_evaluator), ("validation", val_evaluator)]:
-    tb_logger.attach_output_handler(
-        evaluator,
-        event_name=Events.EPOCH_COMPLETED,
-        tag=tag,
-        metric_names="all",
-        global_step_transform=global_step_from_engine(trainer),
-    )
+
+tb_logger.attach_output_handler(
+    evaluator,
+    event_name=Events.EPOCH_COMPLETED,
+    tag="validation",
+    metric_names="all",
+    global_step_transform=global_step_from_engine(trainer),
+)
 
 
 trainer.run(train_loader, max_epochs=5)
