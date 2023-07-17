@@ -77,4 +77,4 @@ class IgniteCifar10FFCVTrainer(IgniteCifar10Trainer):
 
 if __name__ == "__main__":
     trainer = IgniteCifar10FFCVTrainer()
-    trainer.run(max_epochs=5)
+    trainer.run()

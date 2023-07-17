@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Tuple
 
 import torch
+from argparse_dataclass import ArgumentParser, dataclass
 from ignite.contrib.handlers import TensorboardLogger, global_step_from_engine
 from ignite.contrib.handlers.tqdm_logger import ProgressBar
 from ignite.engine import Engine, Events
@@ -13,19 +14,24 @@ from torchvision.datasets import CIFAR10
 from torchvision.models import resnet18
 from torchvision.transforms import Compose, Normalize
 
+from torch_training import Params
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 class IgniteCifar10Trainer:
     def __init__(self) -> None:
+        parser = ArgumentParser(Params)
+        self.params = parser.parse_args()
+
         # data loader
         train_loader, val_loader = self.make_loader()
 
         # network
-        model = resnet18(num_classes=10).to(device)
+        model = resnet18(num_classes=self.params.num_classes).to(device)
 
         # optimizer
-        optimizer = torch.optim.RMSprop(model.parameters(), lr=0.005)
+        optimizer = torch.optim.RMSprop(model.parameters(), lr=self.params.lr)
 
         # trainer
         def train_step(engine: Engine, batch: Tuple) -> dict:
@@ -130,10 +136,10 @@ class IgniteCifar10Trainer:
 
         return train_loader, val_loader
 
-    def run(self, max_epochs: int) -> None:
-        self.trainer.run(self.train_loader, max_epochs=max_epochs)
+    def run(self) -> None:
+        self.trainer.run(self.train_loader, max_epochs=self.params.max_epochs)
 
 
 if __name__ == "__main__":
     trainer = IgniteCifar10Trainer()
-    trainer.run(max_epochs=5)
+    trainer.run()
