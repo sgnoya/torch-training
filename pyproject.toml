@@ -24,6 +24,7 @@ ffcv = "^1.0.2"
 timm = "^0.9.2"
 tensorboard = "^2.13.0"
 torch-tb-profiler = "^0.4.1"
+argparse-dataclass = "^2.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest-cov = "^3.0.0"

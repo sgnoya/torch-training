@@ -23,6 +23,17 @@ files = [
 ]
 
 [[package]]
+name = "argparse-dataclass"
+version = "2.0.0"
+description = "Declarative CLIs with argparse and dataclasses"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "argparse_dataclass-2.0.0-py3-none-any.whl", hash = "sha256:3ffc8852a88d9d98d1364b4441a712491320afb91fb56049afd8a51d74bb52d2"},
+    {file = "argparse_dataclass-2.0.0.tar.gz", hash = "sha256:09ab641c914a2f12882337b9c3e5086196dbf2ee6bf0ef67895c74002cc9297f"},
+]
+
+[[package]]
 name = "assertpy"
 version = "1.1"
 description = "Simple assertion library for unit testing in python with a fluent API"
@@ -3036,4 +3047,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "07256243ac2ae7d71d2d04ef9c47105ce8e0a8522411ce02adea0f91ec020ff9"
+content-hash = "1d07b73bdb4ba7824fbf0a533687297a907246c6e190b1c2fcfb4642f3dd5d61"
